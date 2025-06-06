@@ -1,0 +1,5 @@
+{
+    "ORACLE_USER": "RMXXXXXX",
+    "ORACLE_PASSWORD": "XXXXXX",
+    "ORACLE_DSN": "oracle.fiap.com.br:1521/ORCL"
+}
