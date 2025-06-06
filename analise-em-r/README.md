@@ -1,1 +1,1 @@
-Corrigir estrutura: mover para pasta analise-em-r
+Analise dos dados graficos gerados pelo simulador da ESP32
