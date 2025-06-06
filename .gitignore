@@ -1,4 +1,39 @@
-*.csv
-*.tsv
-*.xls
-*.xlsx
+# Bytecode do Python
+src/__pycache__/
+src/sistema/__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambiente virtual
+venv/
+.env/
+.envrc
+
+# Cache do pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Banco de dados local ou arquivos de exemplo
+*.sqlite3
+*.db
+
+# Gerados por PyInstaller
+*.spec
+dist/
+build/
+
+# Diretórios ocultos do sistema
+.DS_Store
+Thumbs.db
+
+# Relatórios gerados em JSON
+src/relatorios/
