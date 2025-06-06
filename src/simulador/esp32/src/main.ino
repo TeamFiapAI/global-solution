@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <WiFi.h>
 #include <DHT.h>
+#include <HTTPClient.h>
 
 #define ECHO_PIN 16  
 #define TRIG_PIN 17
@@ -101,22 +102,49 @@ void loop() {
     08 = chuva (mm)
   */
 
-String linha = String(distanciaAtual) + ";" +
-               String(distanciaAnterior) + ";" +
-               String(temperatura, 2) + ";" +
-               String(umidade, 2) + ";" +
-               String(dados.vento, 2) + ";" +
-               String(dados.insolacao, 2) + ";" +
-               String(dados.evaporacao, 2) + ";" +
-               String(dados.chuva, 2);
+  String linha = String(distanciaAtual) + ";" +
+                String(distanciaAnterior) + ";" +
+                String(temperatura, 2) + ";" +
+                String(umidade, 2) + ";" +
+                String(dados.vento, 2) + ";" +
+                String(dados.insolacao, 2) + ";" +
+                String(dados.evaporacao, 2) + ";" +
+                String(dados.chuva, 2);
 
-// Exibe exatamente como antes
-Serial.println("--------------------------------------------------");
-Serial.println(linha);
-Serial.println("--------------------------------------------------");
-Serial.println("");
+  // Exibe exatamente como antes
+  Serial.println("--------------------------------------------------");
+  Serial.println(linha);
+  Serial.println("--------------------------------------------------");
+  Serial.println("");
+
+
+
+
+
+  // Envia como texto puro (raw string)
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin("http://192.168.0.72:8000/dados/receber_wokwi");
+    http.addHeader("Content-Type", "text/plain");
+
+    int httpResponseCode = http.POST(linha);
+
+    if (httpResponseCode > 0) {
+      String resposta = http.getString();
+      Serial.println("✅ POST enviado com sucesso!");
+      Serial.println("Resposta: " + resposta);
+    } else {
+      Serial.print("❌ Erro ao enviar POST: ");
+      Serial.println(httpResponseCode);
+    }
+
+    http.end();
+  } else {
+    Serial.println("❌ Wi-Fi não conectado.");
+  }
+
+
 
   distanciaAnterior = distanciaAtual;
-
   delay(intervalo);
 }
