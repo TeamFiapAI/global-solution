@@ -1,62 +1,75 @@
 
-# FIAP - Faculdade de Informática e Administração Paulista
+# 🤖🌧️ Sistema de Previsão de Enchentes com Alerta via Telegram
 
 <p align="center">
-<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+<a href="https://www.fiap.com.br/">
+<img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Administração Paulista" border="0" width="40%" height="40%">
+</a>
 </p>
 
-<br>
+## 🏫 FIAP - Faculdade de Informática e Administração Paulista
 
-# Sistema de Previsão de Enchentes com Alerta via Telegram
+## 💡 Projeto: Global Solution - Inteligência Artificial
 
-## Grupo: Global Solution - Inteligência Artificial
+---
 
-## 👨‍🎓 Integrantes: 
-- <a href="#">Fernando Gomes da Silva</a>
-- <a href="#">Felipe Balthazar de Almeida</a>
-- <a href="#">Guilherme Urbinatti</a> 
-- <a href="#">Vinicius Burchert Vilas Boas</a> 
+## 👨‍🎓 Integrantes
+- 👨‍💻 Fernando Gomes da Silva
+- 🧠 Felipe Balthazar de Almeida
+- 📊 Guilherme Urbinatti
+- 🔧 Vinicius Burchert Vilas Boas
 
-## 👩‍🏫 Professores:
-### Tutor(a) 
-- <a href="https://www.linkedin.com/company/inova-fusca">Lucas Moreira</a>
-### Coordenador(a)
-- <a href="https://www.linkedin.com/company/inova-fusca">André Chiovato</a>
+## 👩‍🏫 Professores
+- 🎓 Tutor: Lucas Moreira
+- 🧭 Coordenador: André Chiovato
+
+---
 
 ## 📜 Descrição
 
-Este sistema tem como objetivo prever o risco de enchentes com base em dados meteorológicos como precipitação, temperatura, umidade, velocidade do vento e pressão atmosférica. Utilizando um modelo de Machine Learning treinado com dados históricos, o sistema classifica o risco de vazão como Baixo, Moderado ou Crítico. Em casos críticos, um alerta é automaticamente enviado para um grupo ou usuário via Telegram, utilizando um bot integrado.
+Este sistema utiliza técnicas de **Machine Learning** 🤖 aplicadas à previsão de **vazão de rios** 🌊 com base em dados meteorológicos 📡 como:
 
-A solução foi desenvolvida em Python com FastAPI, estruturada em módulos limpos que separam o core do modelo preditivo, regras de negócio e notificações. A API permite testar a entrada de dados em tempo real e responde com a previsão da vazão e o nível de risco correspondente. O projeto representa uma aplicação prática da Inteligência Artificial na mitigação de desastres naturais, promovendo ação preventiva em comunidades vulneráveis.
+- precipitação ☔
+- temperatura 🌡️
+- umidade relativa 💧
+- vento 🌬️
+- pressão atmosférica 📉
 
-## 📁 Estrutura de pastas
+A previsão é classificada em três níveis de risco: **Baixo**, **Moderado** e **Crítico** 🚨. Quando o risco é crítico, o sistema envia automaticamente **alertas via Telegram** 📲 utilizando um bot integrado.
 
-Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
+---
 
-- <b>.github</b>: arquivos de configuração do GitHub.
-- <b>assets</b>: imagens e arquivos auxiliares (ex: base histórica .csv).
-- <b>config</b>: arquivos de configuração (em desenvolvimento).
-- <b>document</b>: documentação do projeto.
-- <b>scripts</b>: scripts utilitários (deploy, testes).
-- <b>src</b>: código-fonte principal da aplicação.
-  - <b>routers</b>: controladores das rotas da API.
-  - <b>services</b>: regras de negócio e orquestração.
-  - <b>prediction</b>: modelo de ML e previsão de vazão.
-  - <b>telegram_bot.py</b>: integração com Telegram Bot.
+## 🗂️ Estrutura de Pastas
 
-## 🔧 Como executar o código
+```
+src/
+├── sistema/
+│   ├── main.py                # 🚀 Inicialização da API FastAPI
+│   ├── prediction/            # 🧠 Modelo de ML e previsão
+│   ├── services/              # ⚙️ Lógica de negócio
+│   ├── routers/               # 🌐 Endpoints da API
+│   ├── telegram_bot.py        # 📲 Integração com Telegram Bot
+assets/
+└── history_data.csv           # 📁 Base histórica de dados
+```
+
+---
+
+## 🔧 Como Executar
 
 Pré-requisitos:
 - Python 3.10+
 - Pip
 - Ambiente virtual (recomendado)
 
-Passos:
-
 ```bash
 # Clone o repositório
 git clone https://github.com/TeamFiapAI/global-solution.git
 cd global-solution
+
+# Crie o ambiente virtual
+python -m venv .venv
+source .venv/bin/activate  # ou .venv\Scripts\activate no Windows
 
 # Instale as dependências
 pip install -r requirements.txt
@@ -67,6 +80,29 @@ python -m sistema.main
 # Acesse a documentação interativa
 http://localhost:8000/docs
 ```
+
+---
+
+## 📈 Exemplo de Payload (JSON)
+
+```json
+{
+  "precipitacao_mm": 85.0,
+  "temperatura_maxima_c": 31.5,
+  "temperatura_minima_c": 22.4,
+  "temperatura_media_c": 26.8,
+  "temperatura_compensada_c": 27.1,
+  "umidade_media_pct": 78.0,
+  "umidade_minima_pct": 55.0,
+  "evaporacao_mm": 4.2,
+  "insolacao_horas": 6.5,
+  "vento_velocidade_ms": 2.1,
+  "pressao_hpa": 1012.3,
+  "umidade_solo_pct": 42.7
+}
+```
+
+---
 
 ## 📋 Licença
 
