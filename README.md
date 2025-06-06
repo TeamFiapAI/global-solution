@@ -67,10 +67,6 @@ Pré-requisitos:
 git clone https://github.com/TeamFiapAI/global-solution.git
 cd global-solution
 
-# Crie o ambiente virtual
-python -m venv .venv
-source .venv/bin/activate  # ou .venv\Scripts\activate no Windows
-
 # Instale as dependências
 pip install -r requirements.txt
 
