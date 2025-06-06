@@ -3,6 +3,7 @@ import threading
 import uvicorn
 import asyncio
 from sistema.routers import sensor_router
+from sistema.routers.dashboard_router import router as dashboard_router
 from sistema.prediction import model
 from sistema.interfaces.telegram_bot import iniciar_bot_async
 
@@ -20,6 +21,7 @@ def startup_event():
 
 # Rota com prefixo /dados
 app.include_router(sensor_router.router, prefix="/dados", tags=["Sensores"])
+app.include_router(dashboard_router, prefix="/graficos", tags=["Gráficos"])
 
 # Menu do terminal
 def exibir_menu():

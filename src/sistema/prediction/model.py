@@ -5,13 +5,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 
-# Variáveis globais
 modelo = None
 scaler = None
 colunas_modelo = None
 
+df_limpo = None
+
 def treinar_modelo():
-    global modelo, scaler, colunas_modelo
+    global modelo, scaler, colunas_modelo, df_limpo
 
     # Caminho para o CSV
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,6 +46,7 @@ def treinar_modelo():
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
     df.dropna(inplace=True)
+    df_limpo = df.copy()
 
     # Separar variáveis
     X = df.drop(columns=["data", "vazao"])
@@ -93,3 +95,8 @@ def prever_vazao(dados: dict) -> dict:
         "nivel_de_risco": risco
     }
 
+def get_modelo():
+    return modelo
+
+def get_df_limpo():
+    return df_limpo
