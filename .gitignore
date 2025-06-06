@@ -1,39 +1,96 @@
-# Bytecode do Python
-src/__pycache__/
-src/sistema/__pycache__/
+# Byte-compiled / cache
+__pycache__/
 *.py[cod]
-*$py.class
+*.pyo
+*.pyd
 
-# Ambiente virtual
-venv/
-.env/
-.envrc
+# C extensions
+*.so
 
-# Cache do pip
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Arquivos de log
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Pytest cache
+.pytest_cache/
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+.code-workspace
+
+# PyCharm
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Logs
 *.log
 
-# Arquivos temporários
+# SQLite databases or app files
+*.db
+*.sqlite3
+
+# VS build files (se estiver no Windows)
+*.obj
+*.exe
+*.dll
+*.pdb
+*.lib
+*.vs/
+
+# Arquivos de entrada temporários
 *.tmp
 *.bak
 *.swp
-*.swo
+*~
 
-# Banco de dados local ou arquivos de exemplo
-*.sqlite3
-*.db
+# Arquivos específicos do sistema WSL/Windows/Linux
+*.wslg
+*.sublime-project
+*.sublime-workspace
 
-# Gerados por PyInstaller
-*.spec
-dist/
-build/
+# Arquivos ocultos do IPython e colab
+*.ipynb_checkpoints
+.ipynb_checkpoints/
+.history
 
-# Diretórios ocultos do sistema
-.DS_Store
-Thumbs.db
+# Arquivos do DVC
+.dvc/
 
-# Relatórios gerados em JSON
-src/relatorios/
+# Arquivos do sistema operacional
+.Trashes
+.Spotlight-V100
