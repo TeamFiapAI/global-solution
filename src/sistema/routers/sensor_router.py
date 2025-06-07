@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel
+from datetime import datetime
 from sistema.services.service_risco import processar_previsao
 from sistema.interfaces.telegram_bot import enviar_alerta_para_todos
+from sistema.repository.oracle import salvar_alerta_telegram, salvar_dados_wokwi, salvar_predicao
 
 router = APIRouter()
 
@@ -53,11 +55,26 @@ def receber_string(payload: str = Body(..., media_type="text/plain")):
     try:
         valores = [float(v.strip()) for v in payload.split(";")]
 
-        if len(valores) != 8:
-            raise ValueError("Esperado 8 valores separados por ponto e vírgula.")
+        if len(valores) != 10:
+            raise ValueError("Esperado 10 valores: dist_atual, dist_anterior, temp, umidade, vento, insolação, evaporação, chuva, pressão, umidade_solo.")
 
-        distancia_atual, distancia_anterior, temp, umid, vento, insol, evap, chuva = valores
+        # Desempacota todos os valores recebidos
+        distancia_atual, distancia_anterior, temp, umid, vento, insol, evap, chuva, pressao, umidade_solo = valores
 
+        # 1. Salvar dados crus recebidos
+        dados_id = salvar_dados_wokwi(
+            distancia_atual_cm=distancia_atual,
+            distancia_anterior_cm=distancia_anterior,
+            temperatura=temp,
+            umidade=umid,
+            vento_velocidade_ms=vento,
+            insolacao_h=insol,
+            evaporacao_piche_mm=evap,
+            precipitacao_mm=chuva,
+            data_recebimento=datetime.utcnow()
+        )
+
+        # 2. Monta a estrutura de previsão
         previsao = PrevisaoRequest(
             precipitacao_mm=chuva,
             temperatura_maxima_c=temp,
@@ -69,15 +86,28 @@ def receber_string(payload: str = Body(..., media_type="text/plain")):
             evaporacao_mm=evap,
             insolacao_horas=insol,
             vento_velocidade_ms=vento,
-            pressao_hpa=1013.25,  # fixo por enquanto
-            umidade_solo_pct=30.0  # fixo por enquanto
+            pressao_hpa=pressao,
+            umidade_solo_pct=umidade_solo
         )
 
         entrada = request_to_model_input(previsao)
-        return processar_previsao(entrada)
+        resultado = processar_previsao(entrada)
+        vazao = resultado["vazao_prevista"]
+        risco = resultado["nivel_de_risco"]
+
+        # 3. Salva predição
+        predicao_id = salvar_predicao(dados_id, vazao, risco)
+
+        return {
+            "status": "ok",
+            "dados_id": dados_id,
+            "vazao": vazao,
+            "risco": risco
+        }
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 
 @router.post("/")
@@ -112,5 +142,4 @@ def request_to_model_input(req: PrevisaoRequest) -> dict:
         "pressao_hpa": req.pressao_hpa,
         "umidade_solo_pct": req.umidade_solo_pct
     }
-
 

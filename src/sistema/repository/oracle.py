@@ -1,6 +1,7 @@
 import oracledb
 import os
 import json
+from datetime import datetime
 
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 CONFIG_PATH = os.path.join(BASE_PATH, "config", "config.json")
@@ -24,6 +25,92 @@ def get_conn():
         dsn=DB_DSN
     )
     return connection
+
+from datetime import datetime
+from sistema.repository.oracle import get_conn
+
+def salvar_dados_wokwi(
+    distancia_atual_cm, distancia_anterior_cm, temperatura,
+    umidade, vento_velocidade_ms, insolacao_h,
+    evaporacao_piche_mm, precipitacao_mm, data_recebimento
+):
+    conn = None
+    try:
+        conn = get_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO dados_wokwi (
+                    distancia_atual_cm, distancia_anterior_cm, temperatura,
+                    umidade, vento_velocidade_ms, insolacao_h,
+                    evaporacao_piche_mm, precipitacao_mm, data_recebimento
+                ) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9)
+            """, [
+                distancia_atual_cm, distancia_anterior_cm, temperatura,
+                umidade, vento_velocidade_ms, insolacao_h,
+                evaporacao_piche_mm, precipitacao_mm, data_recebimento
+            ])
+            conn.commit()
+
+            # Captura o último ID inserido
+            cursor.execute("SELECT MAX(id) FROM dados_wokwi")
+            dados_id = cursor.fetchone()[0]
+            return dados_id
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise RuntimeError(f"Erro ao salvar dados do Wokwi: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def salvar_predicao(dados_id, vazao_prevista, risco, explicabilidade=None):
+    conn = None
+    try:
+        conn = get_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO predicoes (
+                    dados_id, vazao_prevista, risco, explicabilidade, data_predicao
+                ) VALUES (:1, :2, :3, :4, :5)
+            """, [
+                int(dados_id),
+                float(vazao_prevista),
+                str(risco),
+                explicabilidade,
+                datetime.utcnow()
+            ])
+            conn.commit()
+            return cursor.lastrowid
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise RuntimeError(f"Erro ao salvar predição: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def salvar_alerta_telegram(predicao_id, mensagem):
+    conn = None
+    try:
+        conn = get_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO alertas_telegram (
+                    predicao_id, mensagem, data_envio
+                ) VALUES (:1, :2, :3)
+            """, [
+                predicao_id, mensagem, datetime.utcnow()
+            ])
+            conn.commit()
+            return cursor.lastrowid
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise RuntimeError(f"Erro ao salvar alerta Telegram: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 def dropar_tabelas():
     print("\n=== Verificando necessidade de dropar tabelas ===")
