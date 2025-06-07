@@ -60,4 +60,7 @@ A cada ciclo, os dados são impressos no `Serial Monitor` no seguinte formato **
 6. Insolação (h)
 7. Evaporação de Piche (mm)
 8. Quantidade de chuva (mm)
+9. Pressao (hpa)
+10. Umidade Solo (%)
 
+## Sensores para o projeto fisico real
