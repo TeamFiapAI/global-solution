@@ -64,3 +64,11 @@ A cada ciclo, os dados são impressos no `Serial Monitor` no seguinte formato **
 10. Umidade Solo (%)
 
 ## Sensores para o projeto fisico real
+| Parâmetro                | Sensor / Método                     | Tipo de Sinal          |
+| ------------------------ | ----------------------------------- | ---------------------- |
+| Distância (nível rio)    | HC-SR04 ou JSN-SR04T                | Digital (echo/trigger) |
+| Temperatura/Umidade      | DHT22 ou BME280                     | Digital / I2C          |
+| Velocidade do vento      | Anemômetro (reed switch)            | Digital (pulsos)       |
+| Insolação (horas de sol) | BH1750 / TSL2561 / LDR              | I2C / Analógico        |
+| Evaporação de Piche      | Cálculo (sem sensor direto)         | —                      |
+| Chuva (mm)               | Pluviômetro basculante (rain gauge) | Digital (pulsos)       |
