@@ -50,7 +50,34 @@ async def notificar_todos(mensagem: str):
 
 @router.post("/receber_wokwi")
 def receber_string(payload: str = Body(..., media_type="text/plain")):
-    return {"Mensagem recebida do wokwi": payload}
+    try:
+        valores = [float(v.strip()) for v in payload.split(";")]
+
+        if len(valores) != 8:
+            raise ValueError("Esperado 8 valores separados por ponto e vírgula.")
+
+        distancia_atual, distancia_anterior, temp, umid, vento, insol, evap, chuva = valores
+
+        previsao = PrevisaoRequest(
+            precipitacao_mm=chuva,
+            temperatura_maxima_c=temp,
+            temperatura_minima_c=temp,
+            temperatura_media_c=temp,
+            temperatura_compensada_c=temp,
+            umidade_media_pct=umid,
+            umidade_minima_pct=umid,
+            evaporacao_mm=evap,
+            insolacao_horas=insol,
+            vento_velocidade_ms=vento,
+            pressao_hpa=1013.25,  # fixo por enquanto
+            umidade_solo_pct=30.0  # fixo por enquanto
+        )
+
+        entrada = request_to_model_input(previsao)
+        return processar_previsao(entrada)
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/")
