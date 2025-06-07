@@ -18,6 +18,8 @@ struct DadosAmbientais {
   float insolacao;   // h
   float evaporacao;  // mm
   float chuva;       // mm
+  float pressao;      // hPa
+  float umidadeSolo;  // %
 };
 
 String getIdentificador() {
@@ -32,14 +34,15 @@ String identificador;
 DadosAmbientais gerarDadosAmbientais(int cenario) {
   DadosAmbientais dados;
   switch (cenario) {
-    case 1: dados.vento = random(5, 20) / 10.0; dados.insolacao = random(80, 120) / 10.0; dados.evaporacao = random(40, 70) / 10.0; dados.chuva = 0; break;
-    case 2: dados.vento = random(10, 30) / 10.0; dados.insolacao = random(60, 100) / 10.0; dados.evaporacao = random(20, 50) / 10.0; dados.chuva = random(1, 20) / 10.0; break;
-    case 3: dados.vento = random(20, 40) / 10.0; dados.insolacao = random(20, 60) / 10.0; dados.evaporacao = random(10, 30) / 10.0; dados.chuva = random(20, 100) / 10.0; break;
-    case 4: dados.vento = random(40, 100) / 10.0; dados.insolacao = random(0, 30) / 10.0; dados.evaporacao = random(0, 20) / 10.0; dados.chuva = random(100, 500) / 10.0; break;
-    case 5: dados.vento = random(80, 200) / 10.0; dados.insolacao = random(0, 10) / 10.0; dados.evaporacao = random(0, 10) / 10.0; dados.chuva = random(500, 1500) / 10.0; break;
+    case 1: dados.vento = random(5, 20) / 10.0; dados.insolacao = random(80, 120) / 10.0; dados.evaporacao = random(40, 70) / 10.0; dados.chuva = 0; dados.pressao = random(1010, 1025) + random(0, 10) / 10.0; dados.umidadeSolo = random(20, 40); break;
+    case 2: dados.vento = random(10, 30) / 10.0; dados.insolacao = random(60, 100) / 10.0; dados.evaporacao = random(20, 50) / 10.0; dados.chuva = random(1, 20) / 10.0; dados.pressao = random(1005, 1020) + random(0, 10) / 10.0; dados.umidadeSolo = random(30, 60); break;
+    case 3: dados.vento = random(20, 40) / 10.0; dados.insolacao = random(20, 60) / 10.0; dados.evaporacao = random(10, 30) / 10.0; dados.chuva = random(20, 100) / 10.0; dados.pressao = random(990, 1010) + random(0, 10) / 10.0; dados.umidadeSolo = random(50, 80); break;
+    case 4: dados.vento = random(40, 100) / 10.0; dados.insolacao = random(0, 30) / 10.0; dados.evaporacao = random(0, 20) / 10.0; dados.chuva = random(100, 500) / 10.0; dados.pressao = random(970, 990) + random(0, 10) / 10.0; dados.umidadeSolo = random(70, 95); break;
+    case 5: dados.vento = random(80, 200) / 10.0; dados.insolacao = random(0, 10) / 10.0; dados.evaporacao = random(0, 10) / 10.0; dados.chuva = random(500, 1500) / 10.0; dados.pressao = random(950, 970) + random(0, 10) / 10.0; dados.umidadeSolo = random(90, 100); break;
   }
   return dados;
 }
+
 
 void setup() {
   Serial.begin(9600);
@@ -89,7 +92,6 @@ void loop() {
   int cenario = random(1, 6); // 1 a 5
   DadosAmbientais dados = gerarDadosAmbientais(cenario);
 
-
   /*
     CSV ou Integracao:
     01 = distância atual (cm)
@@ -100,8 +102,9 @@ void loop() {
     06 = insolação (h)
     07 = evaporação (mm)
     08 = chuva (mm)
+    09 = pressao (hPa)
+    10 = umidade do solo (%)
   */
-
   String linha = String(distanciaAtual) + ";" +
                 String(distanciaAnterior) + ";" +
                 String(temperatura, 2) + ";" +
@@ -109,17 +112,15 @@ void loop() {
                 String(dados.vento, 2) + ";" +
                 String(dados.insolacao, 2) + ";" +
                 String(dados.evaporacao, 2) + ";" +
-                String(dados.chuva, 2);
+                String(dados.chuva, 2) + ";" +
+                String(dados.pressao, 2) + ";" +
+                String(dados.umidadeSolo, 2);
 
   // Exibe exatamente como antes
   Serial.println("--------------------------------------------------");
   Serial.println(linha);
   Serial.println("--------------------------------------------------");
   Serial.println("");
-
-
-
-
 
   // Envia como texto puro (raw string)
   if (WiFi.status() == WL_CONNECTED) {
@@ -142,8 +143,6 @@ void loop() {
   } else {
     Serial.println("❌ Wi-Fi não conectado.");
   }
-
-
 
   distanciaAnterior = distanciaAtual;
   delay(intervalo);
