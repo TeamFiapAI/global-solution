@@ -125,7 +125,7 @@ void loop() {
   // Envia como texto puro (raw string)
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.72:8000/dados/receber_wokwi");
+    http.begin("http://192.168.68.59:8000/dados/receber_wokwi");
     http.addHeader("Content-Type", "text/plain");
 
     int httpResponseCode = http.POST(linha);
