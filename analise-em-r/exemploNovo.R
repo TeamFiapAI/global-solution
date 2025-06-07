@@ -28,7 +28,7 @@ dados_filtrados <- dados %>% filter(mes == mes_desejado, ano == ano_desejado)
 # 📊 3. Gráficos para Especialistas
 # ===============================
 
-pdf("relatorio_completo.pdf", width = 11, height = 8.5)
+pdf("teste.pdf", width = 11, height = 8.5)
 
 # 1️⃣ Nível do Rio ao Longo do Tempo
 ggplot(dados_filtrados, aes(x = datahora, y = distancia_atual)) +
@@ -59,7 +59,7 @@ ggplot(dados_heat, aes(x = hora, y = dia, fill = media_dist)) +
 # 4️⃣ Saldo Hídrico vs Distância
 ggplot(dados_filtrados, aes(x = chuva - evaporacao, y = distancia_atual)) +
   geom_point(aes(color = temperatura), alpha = 0.7) +
-  scale_color_viridis(option = "C", name = "🌡️ Temperatura (°C)") +
+  scale_color_viridis(option = "C", name = "Temperatura (°C)") +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   labs(title = "Saldo Hídrico vs Nível do Rio", x = "Chuva - Evaporação (mm)", y = "Distância (cm)") +
   theme_minimal()
